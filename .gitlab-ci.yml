@@ -9,7 +9,6 @@ build-dev:
   only:
     - main
   before_script:
-    - rm -rf node_modules
     - npm i -g npm
   script:
     - npm i
