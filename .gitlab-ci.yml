@@ -3,28 +3,23 @@ stages:
   - build
   - deploy
 
-
-
-
-pages:
+build_dev:
   image: node:16.20.1-alpine3.17
   stage: build
-  cache:
-    key:
-      files:
-        - package-lock.json
-      prefix: npm
-    paths:
-      - node_modules/
+  only:
+    - dev
+  before_script:
+    - npm i -g npm
   script:
-    - npm install
+    - npm i --legacy-peer-deps
     - npm run build
     - cp -a dist/. public/
   artifacts:
     paths:
       - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    expire_in: 1 week
+  environment:
+    name: development
 
 ######################################### Deploy #########################################
 deploy-dev:
