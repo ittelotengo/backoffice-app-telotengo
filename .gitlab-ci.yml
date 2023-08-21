@@ -3,11 +3,11 @@ stages:
   - build
   - deploy
 
-build_dev:
+build-dev:
   image: node:16.20.1-alpine3.17
   stage: build
   only:
-    - dev
+    - main
   before_script:
     - npm i -g npm
   script:
@@ -19,7 +19,7 @@ build_dev:
       - public
     expire_in: 1 week
   environment:
-    name: development
+    name: main
 
 ######################################### Deploy #########################################
 deploy-dev:
