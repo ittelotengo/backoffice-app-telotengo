@@ -16,7 +16,7 @@ build-dev:
     - cp -a dist/. public/
   artifacts:
     paths:
-      - public
+      - dist
     expire_in: 1 week
   environment:
     name: main
