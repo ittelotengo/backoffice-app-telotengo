@@ -8,7 +8,7 @@ import Payment from "./pages/payment/Payment";
 
   export const router = createBrowserRouter([
     {
-      path: "/",
-      element: Payment,
+      path: "/comprafinalizada/:control",
+      element: <Payment />,
     },
   ]);
