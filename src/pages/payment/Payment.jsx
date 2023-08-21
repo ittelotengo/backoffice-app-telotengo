@@ -5,9 +5,9 @@ export default function Payment() {
   return (
     <div className='w-screen h-screen bg-gray'>
 
-      <div className='w-full h-1/2 bg-primary flex justify-center items-center p-10' >
+      <div className='w-full h-1/2 lg:h-[60%] bg-primary flex justify-center items-center p-10' >
 
-      <div className='w-4/5 h-auto md:w-2/5 xl:w-1/5' >
+      <div className='w-4/5 h-auto sm:w-[50%] lg:w-[30%]' >
 
       <img src={logo} alt="logo"  className='w-full h-auto object-fit: contain'/>
       
