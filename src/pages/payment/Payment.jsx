@@ -1,7 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import logo from '../../assets/payment.png'
+import axios from 'axios';
 
 export default function Payment() {
+  // useEffect(() => {
+  //   // Haz una solicitud GET a la API con autorización
+  //   axios.get('https://paytest.megasoft.com.ve/payment/action/paymentgatewayuniversal-prereg?cod_afiliacion=8082023&factura=500113&monto=365.77', {
+  //     headers: {
+  //       Authorization: 'Basic GVsb3RlbmdvOkNhcmFjYXMxLg==',
+  //     },
+  //   })
+  //     .then((response) => {
+  //       // Si la solicitud tuvo éxito, actualiza los productos
+  //       console.log('RESPUESTA', response)
+  //     })
+  //     .catch((error) => {
+  //       // Si la solicitud falló, muestra un error
+  //       console.log(error);
+  //     });
+  // }, []);
   return (
     <div className='w-screen h-screen bg-gray'>
 
