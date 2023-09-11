@@ -5,7 +5,7 @@ stages:
   - deploy
 
 build-dev:
-  image: node:18.17-alpine3.17,
+  image: node:18.17-alpine3.17
   stage: build
   only:
     - main
