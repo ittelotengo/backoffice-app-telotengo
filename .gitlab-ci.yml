@@ -1,11 +1,11 @@
-image: node:16.20.1-alpine3.17
+image: node:18.17-alpine3.17
 stages:
   - build
   - test
   - deploy
 
 build-dev:
-  image: node:16.20.1-alpine3.17
+  image: node:18.17-alpine3.17,
   stage: build
   only:
     - main
