@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment } from "react";
 import {
   Box,
   Table,
@@ -10,8 +10,8 @@ import {
   TablePagination,
   TableContainer,
   Checkbox,
-} from '@mui/material';
-import { visuallyHidden } from '@mui/utils';
+} from "@mui/material";
+import { visuallyHidden } from "@mui/utils";
 
 const TableDisplay = ({
   columns = [], // Columnas en formato {id: '', label: ''}
@@ -24,35 +24,35 @@ const TableDisplay = ({
   totalRecords, // Registros totales
   limit, // Cantidad maxima de registros
   setLimit, // Funcionar para cambiar maximo de registros
-  headerClasses = '', // Estilos para cabecera
-  headerBoxClasses = '', // Estilo para la caja de la cabecera
-  rowClasses = '', // Estilos para las filas
-  boxClasses = '', // Estilos para la caja maestra
-  paginatorClasses = '', // Estilo para la caja del paginador
+  headerClasses = "", // Estilos para cabecera
+  headerBoxClasses = "", // Estilo para la caja de la cabecera
+  rowClasses = "", // Estilos para las filas
+  boxClasses = "", // Estilos para la caja maestra
+  paginatorClasses = "", // Estilo para la caja del paginador
   setOrderMain = () => {}, // Funcion para setear el orden final
   customCol = [], // Funcion con renders, con el nombre de la columna que sera custom
   detailBox = null, // Detalle para abrir un acordion
   openIndex = null, // index para mostrar
-  colorOdd = 'transparent', // Color cuando sea impar
-  colorPair = '#F5F5F5', // Color cuando sea par
+  colorOdd = "transparent", // Color cuando sea impar
+  colorPair = "#F5F5F5", // Color cuando sea par
   checkboxClasses = {}, // Estilos para el checkbox
-  detailBoxClasses = '', // Estilo para la caja de detalle
-  activeOrderClasses = '', // Estilo para texto activo
-  msgEmpty = 'No posee registros', // Mensaje cuando la tabla este vacia
+  detailBoxClasses = "", // Estilo para la caja de detalle
+  activeOrderClasses = "", // Estilo para texto activo
+  msgEmpty = "No posee registros", // Mensaje cuando la tabla este vacia
   ...props
 }) => {
-  const [orderBy, setOrderBy] = useState('');
-  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState("");
+  const [order, setOrder] = useState("asc");
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
 
-    setOrderMain({ dir: isAsc ? 'desc' : 'asc', by: property });
+    setOrderMain({ dir: isAsc ? "desc" : "asc", by: property });
   };
 
-  const createSortHandler = property => event => {
+  const createSortHandler = (property) => (event) => {
     handleRequestSort(event, property);
   };
 
@@ -69,7 +69,7 @@ const TableDisplay = ({
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -77,7 +77,12 @@ const TableDisplay = ({
   };
 
   return (
-    <div className='w-full rounded-md border-2 border-black-600'>
+    <div
+      className="w-full rounded-md border-2"
+      style={{
+        borderColor: "rgba(224, 224, 224, 1)",
+      }}
+    >
       <TableContainer>
         <Table>
           <TableHead className={headerBoxClasses}>
@@ -85,14 +90,15 @@ const TableDisplay = ({
               {checkBox ? (
                 <TableCell padding="checkbox" className={headerClasses} />
               ) : null}
-              {columns.map(headCell => (
+              {columns.map((headCell) => (
                 <TableCell
                   key={`cell-${headCell.label}`}
-                  align={!headCell.align ? 'center' : headCell.align}
+                  align={!headCell.align ? "center" : headCell.align}
                   padding="normal"
                   className={headerClasses}
-                  sortDirection={orderBy === headCell.id ? order : false}>
-                  {headCell.id === '' ? (
+                  sortDirection={orderBy === headCell.id ? order : false}
+                >
+                  {headCell.id === "" ? (
                     <>{headCell.label}</>
                   ) : (
                     <TableSortLabel
@@ -100,15 +106,16 @@ const TableDisplay = ({
                         active: activeOrderClasses,
                       }}
                       active={orderBy === headCell.id}
-                      direction={orderBy === headCell.id ? order : 'asc'}
+                      direction={orderBy === headCell.id ? order : "asc"}
                       onClick={createSortHandler(headCell.id)}
-                      hideSortIcon>
+                      hideSortIcon
+                    >
                       {headCell.label}
                       {orderBy === headCell.id ? (
                         <Box component="span" sx={visuallyHidden}>
-                          {order === 'desc'
-                            ? 'sorted descending'
-                            : 'sorted ascending'}
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
                         </Box>
                       ) : null}
                     </TableSortLabel>
@@ -131,7 +138,7 @@ const TableDisplay = ({
                 <Fragment key={labelId}>
                   <TableRow
                     hover
-                    onClick={event =>
+                    onClick={(event) =>
                       disabled ? null : handleClick(event, row.id)
                     }
                     role="checkbox"
@@ -144,7 +151,8 @@ const TableDisplay = ({
                         ? { background: colorPair }
                         : { background: colorOdd }
                     }
-                    selected={isItemSelected}>
+                    selected={isItemSelected}
+                  >
                     {checkBox ? (
                       <TableCell padding="checkbox" className={rowClasses}>
                         <Checkbox
@@ -152,7 +160,7 @@ const TableDisplay = ({
                           checked={isItemSelected}
                           disabled={disabled}
                           inputProps={{
-                            'aria-labelledby': labelId,
+                            "aria-labelledby": labelId,
                           }}
                           classes={checkboxClasses}
                         />
@@ -170,9 +178,10 @@ const TableDisplay = ({
                           key={`cell-content-${indexr}-${index}-${el.col}`}
                           id={`cell-content-${indexr}-${index}-${el.col}`}
                           component="td"
-                          align={!el.align ? 'center' : el.align}
+                          align={!el.align ? "center" : el.align}
                           padding="normal"
-                          className={rowClasses}>
+                          className={rowClasses}
+                        >
                           {isCustom
                             ? customCol[el.col].render(row)
                             : row[el.col]}
@@ -184,19 +193,21 @@ const TableDisplay = ({
                     <TableRow
                       hover
                       id={`detalle-${labelId}`}
-                      onClick={event =>
+                      onClick={(event) =>
                         disabled ? null : handleClick(event, row.id)
                       }
                       key={`detalle-${row.name}`}
                       style={
                         index % 2
-                          ? { background: '#F5F5F5' }
+                          ? { background: "#F5F5F5" }
                           : { background: colorOdd }
-                      }>
+                      }
+                    >
                       <TableCell
                         colSpan={columns.length}
                         className={detailBoxClasses}
-                        padding="none">
+                        padding="none"
+                      >
                         {detailBox(row)}
                       </TableCell>
                     </TableRow>
@@ -212,7 +223,8 @@ const TableDisplay = ({
                   align="center"
                   className={rowClasses}
                   padding="normal"
-                  colSpan={columns.length}>
+                  colSpan={columns.length}
+                >
                   {msgEmpty}
                 </TableCell>
               </TableRow>

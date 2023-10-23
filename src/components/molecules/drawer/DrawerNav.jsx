@@ -82,7 +82,7 @@ function DrawerNav() {
         {
           text: "Sellers",
           id: "sellers",
-          to: "/sellers",
+          to: "/sellers/list",
           icon: (
             <CommerceIcon
               color={pathname.includes("sellers") ? "#5528E3" : "#747576"}

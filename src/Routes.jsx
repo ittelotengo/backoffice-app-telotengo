@@ -5,6 +5,7 @@ import Login from "./pages/auth/Login";
 import AuthGuard from './components/templates/auth/AuthGuard'
 import DashboardLayout from "./components/templates/dashboard/DashboardLayout";
 import ListSellers from "./pages/app/sellers/ListSellers";
+import CreateSeller from "./pages/app/sellers/CreateSeller";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +27,17 @@ export const router = createBrowserRouter([
     children: [
       {
         path: 'sellers',
-        element: <ListSellers />
+        children: [
+          {
+            path: 'list',
+            element: <ListSellers />
+          },
+          {
+            path: 'create',
+            element: <CreateSeller />
+          },
+        ]
+        
       }
     ],
   },
