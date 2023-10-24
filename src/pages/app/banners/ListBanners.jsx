@@ -5,15 +5,15 @@ import MoreIconButton from "../../../components/atoms/icon/MoreIconButton";
 import { useNavigate } from "react-router-dom";
 import LoaderComponent from "../../../components/atoms/loader/LoaderComponent";
 import HeaderSection from "../../../components/molecules/header/HeaderSection";
-import { getSellers } from "../../../repositories/sellers.repository";
+import { getBanners } from "../../../repositories/banners.repository";
 
-function ListSellers() {
+function ListBanners() {
   const [numofrecords, setNumofrecords] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [firstTime, setFirstTime] = useState(true);
   const [openOption, setOpenOption] = useState("");
-  const [sellers, setSellers] = useState([]);
+  const [banners, setBanners] = useState([]);
   const [filters, setFilters] = useState({
     page: 0,
     limit: 5,
@@ -29,36 +29,36 @@ function ListSellers() {
 
   useEffect(() => {
     setLoading(true);
-    getSellers().then((res) => setSellers(res));
+    getBanners().then((res) => setBanners(res));
     setLoading(false);
   }, []);
 
   return (
     <div className="w-full h-full">
       <HeaderSection
-        title="Sellers"
-        textButton="Crear Seller"
-        onClickButton={() => navigation("/sellers/create")}
+        title="Banners"
+        textButton="Crear Banner"
+        onClickButton={() => navigation("/banners/create")}
         setsearchFilter={setsearchFilter}
       />
 
       <div className="w-full">
         <TableDisplay
-          msgEmpty="No posee sellers"
+          msgEmpty="No posee banners"
           mt={2}
           maxWidth="1200px"
           columns={[
-            { id: "image", label: "Logo", col: "image" },
-            { id: "name", label: "Nombre", col: "name" },
-
+            { id: "url", label: "Logo", col: "url" },
+            { id: "section", label: "Sección", col: "section" },
+            { id: "order", label: "Orden", col: "order" },
             { id: "", label: "Opciones", col: "options" },
           ]}
           data={
             searchFilter
-              ? sellers.filter((item) =>
+              ? banners.filter((item) =>
                   item.name.toLowerCase().includes(searchFilter.toLowerCase())
                 )
-              : sellers ?? []
+              : banners ?? []
           }
           page={page}
           setPage={(val) =>
@@ -85,7 +85,7 @@ function ListSellers() {
             }))
           }
           customCol={{
-            image: {
+            url: {
               render: (row) => (
                 <div
                   style={{
@@ -96,7 +96,7 @@ function ListSellers() {
                 >
                   <div style={{ maxWidth: "50px" }}>
                     <img
-                      src={row.image}
+                      src={row.url}
                       alt="Descripción de la imagen"
                       style={{ width: "100%", height: "auto" }}
                     />
@@ -142,7 +142,7 @@ function ListSellers() {
                     </MenuItem> */}
                     <MenuItem
                       id="itemEditsellers"
-                      onClick={() => navigation(`/sellers/update/${row.id}`)}
+                      onClick={() => navigation(`/banners/update/${row.id}`)}
                     >
                       {/* <EditIcon /> */}
                       Editar
@@ -159,4 +159,4 @@ function ListSellers() {
   );
 }
 
-export default ListSellers;
+export default ListBanners;

@@ -6,6 +6,8 @@ import AuthGuard from './components/templates/auth/AuthGuard'
 import DashboardLayout from "./components/templates/dashboard/DashboardLayout";
 import ListSellers from "./pages/app/sellers/ListSellers";
 import CreateSeller from "./pages/app/sellers/CreateSeller";
+import ListBanners from "./pages/app/banners/ListBanners";
+import CreateBanner from "./pages/app/banners/CreateBanner";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +28,24 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
+        path: 'banners',
+        children: [
+          {
+            path: 'list',
+            element: <ListBanners />
+          },
+          {
+            path: 'create',
+            element: <CreateBanner />
+          },
+          {
+            path: 'update/:id',
+            element: <CreateBanner />
+          },
+        ]
+        
+      },
+      {
         path: 'sellers',
         children: [
           {
@@ -34,6 +54,10 @@ export const router = createBrowserRouter([
           },
           {
             path: 'create',
+            element: <CreateSeller />
+          },
+          {
+            path: 'update/:id',
             element: <CreateSeller />
           },
         ]

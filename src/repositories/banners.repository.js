@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, getDocs, updateDoc } from "firebase/firestore"; 
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore"; 
 import { db } from "../../firebaseConfig";
 
 export const getBanners = async () => {
@@ -21,6 +21,21 @@ export const createBanner = async (payload) => {
       } catch (e) {
         console.error("Error adding document: ", e);
       }
+}
+
+export const detailBanner= async (id) => {
+  try {
+      const docRef = await getDoc(doc(db, "banners", id))
+      
+      
+      if (docRef.exists()) {
+        return docRef.data()
+      } else {
+        return {}
+      }
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
 }
 
 export const updateBanner = async (id, payload) => {

@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, getDocs, updateDoc } from "firebase/firestore"; 
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore"; 
 import { db } from "../../firebaseConfig";
 
 export const getSellers = async () => {
@@ -23,6 +23,21 @@ export const createSeller = async (payload) => {
       }
 }
 
+export const detailSeller = async (id) => {
+  try {
+      const docRef = await getDoc(doc(db, "sellers", id))
+      
+      
+      if (docRef.exists()) {
+        return docRef.data()
+      } else {
+        return {}
+      }
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+}
+
 export const updateSeller = async (id, payload) => {
     try {
         const docRef = await updateDoc(doc(db, "sellers", id), payload)
@@ -33,9 +48,9 @@ export const updateSeller = async (id, payload) => {
       }
 }
 
-export const deleteSeller = async (id, payload) => {
+export const deleteSeller = async (id) => {
     try {
-        const docRef = await deleteDoc(doc(db, "sellers", id), payload);
+        const docRef = await deleteDoc(doc(db, "sellers", id));
       
         return docRef.id
       } catch (e) {

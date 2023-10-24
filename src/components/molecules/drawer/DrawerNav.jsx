@@ -76,7 +76,7 @@ function DrawerNav() {
         {
           text: "Banners",
           id: "banners",
-          to: "/",
+          to: "/banners/list",
           icon: <HomeIcon />,
         },
         {

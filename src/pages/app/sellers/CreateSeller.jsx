@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Grid,
@@ -12,14 +12,23 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import ButtonGeneric from "../../../components/atoms/button/ButtonGeneric";
-import { createSeller } from "../../../repositories/sellers.repository";
+import { createSeller, detailSeller, updateSeller } from "../../../repositories/sellers.repository";
+import LoaderComponent from "../../../components/atoms/loader/LoaderComponent";
 
 function CreateSeller() {
   const navigate = useNavigate();
-  const [visibilyPassword, setVisibilityPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  const currentPath = window.location.pathname;
+
+  const { id } = useParams()
+  const [isCreate, setIsCreate] = useState(["create"].includes(currentPath));
+
+  
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(" Campo Requerido"),
@@ -38,11 +47,34 @@ function CreateSeller() {
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      createSeller(values).then((res) => {
-        navigate("/sellers/list");
-      });
+      setIsLoading(true)
+      if (isCreate) {
+        createSeller(values).then((res) => {
+          navigate("/sellers/list");
+          setIsLoading(false)
+        });
+      } else {
+        updateSeller(id, values).then((res) => {
+          navigate("/sellers/list");
+          setIsLoading(false)
+        });
+      }
+      
     },
   });
+  
+  useEffect(() => {
+    if (!id || isCreate) return
+    setIsLoading(true)
+    detailSeller(id).then(data => {
+      formik.setFieldValue("name", data.name);
+      formik.setFieldValue("key", data.key);
+      formik.setFieldValue("token", data.token);
+      formik.setFieldValue("image", data.image);
+      setIsLoading(false)
+    })
+  }, [])
+  
 
   return (
     <div className="w-full h-full">
@@ -70,7 +102,7 @@ function CreateSeller() {
                   type={"text"}
                   key={"name"}
                   name={"name"}
-                  label="Nombre del Comercio"
+                  label="Nombre del Seller"
                   variant="outlined"
                   fullWidth
                   value={formik.values.name}
@@ -97,7 +129,7 @@ function CreateSeller() {
                   placeholder="Key del Seller"
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   type={"text"}
                   key={"token"}
@@ -111,6 +143,8 @@ function CreateSeller() {
                   error={formik.touched.token && Boolean(formik.errors.token)}
                   helperText={formik.touched.token && formik.errors.token}
                   placeholder="Token del Seller"
+                  multiline
+                  rows={6}
                 />
               </Grid>
             </Grid>
@@ -135,6 +169,7 @@ function CreateSeller() {
           </div>
         </form>
       </div>
+      {isLoading && <LoaderComponent />}
     </div>
   );
 }
