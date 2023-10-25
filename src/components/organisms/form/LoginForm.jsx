@@ -27,7 +27,7 @@ function LoginForm() {
     onSubmit: async (values, { setSubmitting }) => {
       const { email, password } = values;
       try {
-        navigate("/")
+        navigate("/banners/list")
         // if (data.data.token) {
         //   localStorage.setItem('user', JSON.stringify(data.data.user));
         //   localStorage.setItem('token', data.data.token);

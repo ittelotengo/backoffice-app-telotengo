@@ -22,20 +22,28 @@ import {
 } from "../../../repositories/sellers.repository";
 import LoaderComponent from "../../../components/atoms/loader/LoaderComponent";
 import { getSections } from "../../../repositories/sections.repository";
-import { detailBanner } from "../../../repositories/banners.repository";
+import {
+  createBanner,
+  deleteBanner,
+  detailBanner,
+  updateBanner,
+} from "../../../repositories/banners.repository";
 import { storage } from "../../../../firebaseConfig";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 function CreateBanner() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [sections, setSections] = useState([]);
   const [progress, setProgress] = useState(0);
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState(null);
 
   const currentPath = window.location.pathname;
 
   const { id } = useParams();
-  const [isCreate, setIsCreate] = useState(["create"].includes(currentPath));
+  const [isCreate, setIsCreate] = useState(
+    currentPath.split("/").includes("create")
+  );
 
   const validationSchema = Yup.object().shape({
     order: Yup.string().required(" Campo Requerido"),
@@ -50,24 +58,81 @@ function CreateBanner() {
     url: "",
   };
 
+  const handleChange = (e) => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+      formik.setFieldValue("url", URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const handleUpload = async (file, id) => {
+    // Create a root reference
+    const storage = getStorage();
+
+    // Create a reference to 'mountains.jpg'
+    const storageRef = ref(storage, `banners/${id}`);
+
+    try {
+      const uploadFile = await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(uploadFile.ref);
+
+      return url;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
       setIsLoading(true);
       if (isCreate) {
-        createSeller(values).then((res) => {
-          navigate("/banners/list");
-          setIsLoading(false);
+        if (!file) return;
+        createBanner(values).then((resId) => {
+          handleUpload(file, resId).then((url) => {
+            updateBanner(resId, {
+              ...values,
+              url,
+            }).then((res) => {
+              navigate("/banners/list");
+              setIsLoading(false);
+            });
+          });
         });
       } else {
-        updateSeller(id, values).then((res) => {
-          navigate("/banners/list");
-          setIsLoading(false);
-        });
+        if (file) {
+          handleUpload(file, id).then((url) => {
+            updateBanner(id, {
+              ...values,
+              url,
+            }).then((res) => {
+              navigate("/banners/list");
+              setIsLoading(false);
+            });
+          });
+        } else {
+          updateBanner(id, values).then((res) => {
+            navigate("/banners/list");
+            setIsLoading(false);
+          });
+        }
+        
       }
     },
   });
+
+  const handleDelete = (id) => {
+    setIsLoading(true);
+    deleteBanner(id)
+      .then((res) => {
+        navigate("/banners/list");
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     getSections().then((res) => setSections(res));
@@ -83,50 +148,28 @@ function CreateBanner() {
     });
   }, []);
 
-  const handleChange = (e) => {
-    if (e.target.files[0]) {
-      setFile(e.target.files[0]);
-      formik.setFieldValue("url", URL.createObjectURL(e.target.files[0]));
-    }
-  };
-
-  const handleUpload = (image) => {
-    const uploadTask = storage.ref(`banners/${image.name}`).put(image);
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        // Progreso de la carga
-        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        setProgress(progress);
-      },
-      (error) => {
-        // Manejo de errores
-        console.log(error);
-      },
-      () => {
-        // Completa la carga exitosamente
-        storage
-          .ref('images')
-          .child(image.name)
-          .getDownloadURL()
-          .then((url) => {
-            console.log("URL", url)
-            return url
-          });
-      }
-    );
-  };
-
   return (
-    <div className="w-full h-full">
-      <div className="flex items-center">
-        <IconButton
-          // className={styles.backBtn}
-          onClick={() => navigate("/banners/list")}
-        >
-          <ArrowBackIcon />
-        </IconButton>
-        <h1 className="font-bold text-3xl ml-4"> Crear Banner</h1>
+    <div className="w-full h-full mb-6">
+      <div className="w-full flex items-center justify-between">
+        <div className="flex items-center">
+          <IconButton
+            // className={styles.backBtn}
+            onClick={() => navigate("/banners/list")}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <h1 className="font-bold text-3xl ml-4"> {isCreate ? "Crear Banner" : "Editar Banner"} </h1>
+        </div>
+
+        {!isCreate && (<ButtonGeneric
+          type="Button"
+          onClick={() => handleDelete(id)}
+          text="Eliminar"
+          className="w-[13%]"
+          style={{
+            color: "white",
+          }}
+        />)}
       </div>
 
       <div className="pt-6">
@@ -141,7 +184,7 @@ function CreateBanner() {
             <Grid item container sx={6} spacing={2} xs={6}>
               <Grid item xs={12}>
                 <div className=" px-4 border-2 border-gray-300 border-dashed flex flex-col justify-center h-full">
-                    {/* <progress value={progress} max="100" className="w-full" /> */}
+                  {/* <progress value={progress} max="100" className="w-full" /> */}
                   <br />
                   {formik.values.url && (
                     <img
@@ -158,11 +201,11 @@ function CreateBanner() {
             <Grid item container sx={12} spacing={2} xs={6}>
               <Grid item xs={12}>
                 <Select
-                  id={"rif_type"}
+                  id={"section"}
                   value={formik.values.section}
                   onChange={formik.handleChange}
                   fullWidth
-                  name="rif_type"
+                  name="section"
                 >
                   {sections.map((section) => {
                     return (

@@ -77,7 +77,7 @@ function DrawerNav() {
           text: "Banners",
           id: "banners",
           to: "/banners/list",
-          icon: <HomeIcon />,
+          icon: <HomeIcon color={pathname.includes("banners") ? "#5528E3" : "#747576"}/>,
         },
         {
           text: "Sellers",

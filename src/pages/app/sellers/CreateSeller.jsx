@@ -15,25 +15,39 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import ButtonGeneric from "../../../components/atoms/button/ButtonGeneric";
-import { createSeller, detailSeller, updateSeller } from "../../../repositories/sellers.repository";
+import {
+  createSeller,
+  deleteSeller,
+  detailSeller,
+  updateSeller,
+} from "../../../repositories/sellers.repository";
 import LoaderComponent from "../../../components/atoms/loader/LoaderComponent";
+import { uploadFileStorage } from "../../../repositories/banners.repository";
 
 function CreateSeller() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [file, setFile] = useState(null);
 
   const currentPath = window.location.pathname;
 
-  const { id } = useParams()
-  const [isCreate, setIsCreate] = useState(["create"].includes(currentPath));
+  const { id } = useParams();
+  const [isCreate, setIsCreate] = useState(
+    currentPath.split("/").includes("create")
+  );
 
-  
+  const handleChange = (e) => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+      formik.setFieldValue("image", URL.createObjectURL(e.target.files[0]));
+    }
+  };
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(" Campo Requerido"),
     key: Yup.string().required(" Campo Requerido"),
     token: Yup.string().required(" Campo Requerido"),
+    image: Yup.string().required(" Campo Requerido"),
   });
 
   const initialValues = {
@@ -47,45 +61,91 @@ function CreateSeller() {
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      setIsLoading(true)
+      setIsLoading(true);
       if (isCreate) {
-        createSeller(values).then((res) => {
-          navigate("/sellers/list");
-          setIsLoading(false)
+        if (!file) return;
+        createSeller(values).then((resId) => {
+          uploadFileStorage(file, resId, "sellers").then((url) => {
+            updateSeller(resId, {
+              ...values,
+              image: url,
+            }).then((res) => {
+              navigate("/sellers/list");
+              setIsLoading(false);
+            });
+          });
         });
       } else {
-        updateSeller(id, values).then((res) => {
-          navigate("/sellers/list");
-          setIsLoading(false)
-        });
+        if (file) {
+          uploadFileStorage(file, id, "sellers").then((url) => {
+            updateSeller(id, {
+              ...values,
+              image: url,
+            }).then((res) => {
+              navigate("/sellers/list");
+              setIsLoading(false);
+            });
+          });
+        } else {
+          updateSeller(id, values).then((res) => {
+            navigate("/sellers/list");
+            setIsLoading(false);
+          });
+        }
       }
-      
     },
   });
-  
+
+  const handleDelete = (id) => {
+    setIsLoading(true);
+    deleteSeller(id)
+      .then((res) => {
+        navigate("/sellers/list");
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
-    if (!id || isCreate) return
-    setIsLoading(true)
-    detailSeller(id).then(data => {
+    if (!id || isCreate) return;
+    setIsLoading(true);
+    detailSeller(id).then((data) => {
       formik.setFieldValue("name", data.name);
       formik.setFieldValue("key", data.key);
       formik.setFieldValue("token", data.token);
       formik.setFieldValue("image", data.image);
-      setIsLoading(false)
-    })
-  }, [])
-  
+      setIsLoading(false);
+    });
+  }, []);
 
   return (
-    <div className="w-full h-full">
-      <div className="flex items-center">
-        <IconButton
-          // className={styles.backBtn}
-          onClick={() => navigate("/sellers/list")}
-        >
-          <ArrowBackIcon />
-        </IconButton>
-        <h1 className="font-bold text-3xl ml-4"> Crear Seller</h1>
+    <div className="w-full h-full mb-6">
+      <div className="w-full flex items-center justify-between">
+        <div className="flex items-center">
+          <IconButton
+            // className={styles.backBtn}
+            onClick={() => navigate("/sellers/list")}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <h1 className="font-bold text-3xl ml-4">
+            {" "}
+            {isCreate ? "Crear Seller" : "Editar Seller"}
+          </h1>
+        </div>
+        {!isCreate && (
+          <ButtonGeneric
+            type="Button"
+            onClick={() => handleDelete(id)}
+            text="Eliminar"
+            className="w-[13%]"
+            style={{
+              color: "white",
+            }}
+          />
+        )}
       </div>
 
       <div className="pt-6">
@@ -146,6 +206,34 @@ function CreateSeller() {
                   multiline
                   rows={6}
                 />
+              </Grid>
+            </Grid>
+            <h1 className="font-bold text-2xl ml-4 mt-6">Logo del seller</h1>
+            <Grid item container xs={12} marginY={2}>
+              <Grid item xs={6}>
+                <div className=" px-4 border-2 border-gray-300 border-dashed flex flex-col justify-center h-full">
+                  {/* <progress value={progress} max="100" className="w-full" /> */}
+                  <br />
+                  {formik.values.image && (
+                    <img
+                      src={formik.values.image}
+                      alt="Uploaded"
+                      className="mt-4"
+                    />
+                  )}
+                  <br />
+                  <input type="file" onChange={handleChange} className="mb-4" />
+                </div>
+                {formik.errors["image"] && (
+                  <p
+                    className="text-red-400"
+                    style={{
+                      color: "#d32f2f",
+                    }}
+                  >
+                    {formik.errors["image"]}
+                  </p>
+                )}
               </Grid>
             </Grid>
           </Grid>

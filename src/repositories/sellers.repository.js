@@ -42,7 +42,7 @@ export const updateSeller = async (id, payload) => {
     try {
         const docRef = await updateDoc(doc(db, "sellers", id), payload)
       
-        return docRef.id
+        return docRef
       } catch (e) {
         console.error("Error update document: ", e);
       }
@@ -52,7 +52,7 @@ export const deleteSeller = async (id) => {
     try {
         const docRef = await deleteDoc(doc(db, "sellers", id));
       
-        return docRef.id
+        return docRef
       } catch (e) {
         console.error("Error delete document: ", e);
       }

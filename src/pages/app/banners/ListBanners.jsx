@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LoaderComponent from "../../../components/atoms/loader/LoaderComponent";
 import HeaderSection from "../../../components/molecules/header/HeaderSection";
 import { getBanners } from "../../../repositories/banners.repository";
+import { getSections } from "../../../repositories/sections.repository";
 
 function ListBanners() {
   const [numofrecords, setNumofrecords] = useState(0);
@@ -14,6 +15,7 @@ function ListBanners() {
   const [firstTime, setFirstTime] = useState(true);
   const [openOption, setOpenOption] = useState("");
   const [banners, setBanners] = useState([]);
+  const [sections, setSections] = useState([]);
   const [filters, setFilters] = useState({
     page: 0,
     limit: 5,
@@ -29,8 +31,13 @@ function ListBanners() {
 
   useEffect(() => {
     setLoading(true);
-    getBanners().then((res) => setBanners(res));
-    setLoading(false);
+    getBanners().then((res) => {
+      setBanners(res);
+      getSections().then((sec) => {
+        setSections(sec);
+        setLoading(false);
+      });
+    });
   }, []);
 
   return (
@@ -55,10 +62,20 @@ function ListBanners() {
           ]}
           data={
             searchFilter
-              ? banners.filter((item) =>
-                  item.name.toLowerCase().includes(searchFilter.toLowerCase())
-                )
-              : banners ?? []
+              ? banners
+                  .filter((item) =>
+                    sections.find((elem) => elem.id == item.section)?.label
+                      ? sections
+                          .find((elem) => elem.id == item.section)
+                          ?.label.toLowerCase()
+                          .includes(searchFilter.toLowerCase())
+                      : item.section
+                          .toLowerCase()
+                          .includes(searchFilter.toLowerCase())
+                  )
+                  .sort((a, b) => Number(a.section) - Number(b.section))
+              : banners.sort((a, b) => Number(a.section) - Number(b.section)) ??
+                []
           }
           page={page}
           setPage={(val) =>
@@ -103,6 +120,11 @@ function ListBanners() {
                   </div>
                 </div>
               ),
+            },
+            section: {
+              render: (row) =>
+                sections.find((elem) => elem.id == row.section)?.label ||
+                row.section,
             },
             options: {
               render: (row) => (
