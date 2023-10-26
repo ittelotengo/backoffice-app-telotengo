@@ -29,12 +29,15 @@ function ListSellers() {
 
   useEffect(() => {
     setLoading(true);
-    getSellers().then((res) => setSellers(res));
-    setLoading(false);
+    getSellers().then((res) => {
+      setSellers(res);
+      setLoading(false);
+    });
+    
   }, []);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full mb-6">
       <HeaderSection
         title="Sellers"
         textButton="Crear Seller"

@@ -41,7 +41,7 @@ function ListBanners() {
   }, []);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full mb-6">
       <HeaderSection
         title="Banners"
         textButton="Crear Banner"

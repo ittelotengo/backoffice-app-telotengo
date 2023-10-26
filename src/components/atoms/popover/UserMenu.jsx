@@ -3,11 +3,13 @@ import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 
 function UserMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const auth = getAuth();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -18,8 +20,15 @@ function UserMenu() {
   };
 
   const handleLogout = async () => {
-    navigate('/auth/login')
-    setAnchorEl(null);
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        navigate("/auth/login");
+        setAnchorEl(null);
+      })
+      .catch((error) => {
+        // An error happened.
+      });
   };
 
   return (
@@ -30,7 +39,7 @@ function UserMenu() {
         aria-controls="menu-appbar"
         aria-haspopup="true"
         onClick={handleMenu}
-        color="inherit" 
+        color="inherit"
       >
         <AccountCircle />
       </IconButton>
@@ -48,7 +57,7 @@ function UserMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleLogout} >{"Cerrar Sesión"}</MenuItem>
+        <MenuItem onClick={handleLogout}>{"Cerrar Sesión"}</MenuItem>
       </Menu>
     </div>
   );

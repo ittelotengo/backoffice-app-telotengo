@@ -4,17 +4,18 @@ import CreateForm from "../../molecules/form/CreateForm";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 function LoginForm() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const auth = getAuth();
   const config = {
     fields: {
       email: {
         label: "Email",
         initialValue: "",
-        validation: Yup.string()
-          .required("El email es requerido"),
-          // .email("Email inválido"),
+        validation: Yup.string().required("El email es requerido"),
+        // .email("Email inválido"),
         type: "text",
       },
       password: {
@@ -27,36 +28,29 @@ function LoginForm() {
     onSubmit: async (values, { setSubmitting }) => {
       const { email, password } = values;
       try {
+        // navigate("/banners/list")
+        const userCredential = await signInWithEmailAndPassword(auth, email, password)
+
+        const user = userCredential.user;
+        localStorage.setItem('email', user?.email);
+        localStorage.setItem('uid', user?.uid);
+        localStorage.setItem('accessToken', user?.accessToken);
+        enqueueSnackbar("Bienvenido!", {
+          variant: "success",
+        });
         navigate("/banners/list")
-        // if (data.data.token) {
-        //   localStorage.setItem('user', JSON.stringify(data.data.user));
-        //   localStorage.setItem('token', data.data.token);
-        //   navigate("/")
-        // }
       } catch (error) {
-        const {
-          status,
-          data: { data: msg },
-        } = error.response;
-        switch (status) {
-          case 401:
-            enqueueSnackbar('Datos incorrectos', {
-              variant: 'error',
-            });
-            break;
-          case 409:
-            enqueueSnackbar('Usuario posee una sesion activa', {
-              variant: 'error',
-            });
-            break;
-          case 500:
-            enqueueSnackbar('Error interno', {
-              variant: 'error',
+        const errorCode = error.code;
+        const msg = error.message;
+        switch (errorCode) {
+          case "auth/invalid-login-credentials":
+            enqueueSnackbar("Datos incorrectos", {
+              variant: "error",
             });
             break;
           default:
-            enqueueSnackbar(msg, {
-              variant: 'error',
+            enqueueSnackbar("Ha ocurrido un error", {
+              variant: "error",
             });
             break;
         }
