@@ -4,13 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAdV5-txDMjYkoKm0qYo1Sh2aEs1h-0HBs",
-    authDomain: "telotengo-4d75e.firebaseapp.com",
-    projectId: "telotengo-4d75e",
-    storageBucket: "telotengo-4d75e.appspot.com",
-    messagingSenderId: "361534171128",
-    appId: "1:361534171128:web:882d22013a10c30a76d80d",
-    storageBucket: "gs://telotengo-4d75e.appspot.com"
+    apiKey: "AIzaSyDHj17Fb4Br8geJ8qyE2A37he9lsVs6GvA",
+    authDomain: "telotengo-7d2d0.firebaseapp.com",
+    projectId: "telotengo-7d2d0",
+    storageBucket: "telotengo-7d2d0.appspot.com",
+    messagingSenderId: "848347261552",
+    appId: "1:848347261552:web:20f80177c4e97202a022b5",
+    // storageBucket: "gs://telotengo-7d2d0.appspot.com",
   };
 
 // Initialize Firebase
