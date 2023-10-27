@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDHj17Fb4Br8geJ8qyE2A37he9lsVs6GvA",
-    authDomain: "telotengo-7d2d0.firebaseapp.com",
-    projectId: "telotengo-7d2d0",
-    storageBucket: "telotengo-7d2d0.appspot.com",
-    messagingSenderId: "848347261552",
-    appId: "1:848347261552:web:20f80177c4e97202a022b5",
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
     // storageBucket: "gs://telotengo-7d2d0.appspot.com",
   };
 
