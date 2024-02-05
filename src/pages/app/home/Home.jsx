@@ -41,7 +41,7 @@ const Home = () => {
 
   useEffect(() => {
     setLoading(true);
-    getPriceDolla
+    getPriceDollar()
       .then((res) => {
         if (isEmpty(res)) return
       
