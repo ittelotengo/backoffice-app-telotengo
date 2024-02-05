@@ -8,6 +8,7 @@ import ListSellers from "./pages/app/sellers/ListSellers";
 import CreateSeller from "./pages/app/sellers/CreateSeller";
 import ListBanners from "./pages/app/banners/ListBanners";
 import CreateBanner from "./pages/app/banners/CreateBanner";
+import Home from "./pages/app/home/Home";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
       </AuthGuard>
     ),
     children: [
+      {
+        path: '/',
+        element: <Home />
+      },
       {
         path: 'banners',
         children: [

@@ -74,6 +74,12 @@ function DrawerNav() {
     <List>
       {[
         {
+          text: "Inicio",
+          id: "home",
+          to: "/",
+          icon: <HomeIcon color={["banners","sellers" ].includes(pathname) ?  "#5528E3" :  "#747576"}/>,
+        },
+        {
           text: "Banners",
           id: "banners",
           to: "/banners/list",
@@ -115,7 +121,7 @@ function DrawerNav() {
               primary={item.text}
               sx={{
                 opacity: open ? 1 : 0,
-                color: pathname.includes(item.id) || openCollapse ===  item.id ? "#5528E3" : "#747576",
+                color: (item.id != 'home' ? pathname.includes(item.id) : false) || openCollapse ===  item.id ? "#5528E3" : "#747576",
               }}
               onClick={() => null}
             />

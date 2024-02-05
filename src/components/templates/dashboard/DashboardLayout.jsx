@@ -20,7 +20,7 @@ function DashboardLayout() {
       <Layout style={{ minHeight: "92.25vh", background: "#F8F9FB" }} hasSider>
         {/* <DrawerNav /> */}
         <Sider
-          width={300}
+          width={200}
           style={{
             overflow: "auto",
             height: "100vh",
@@ -35,7 +35,7 @@ function DashboardLayout() {
         </Sider>
         <Layout
           className="site-layout"
-          style={{ marginLeft: 300, background: "#F8F9FB" }}
+          style={{ marginLeft: 200, background: "#F8F9FB" }}
         >
           <Content style={{ margin: "80px 30px 0", overflow: "initial" }}>
             <Outlet />

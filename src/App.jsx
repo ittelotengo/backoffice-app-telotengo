@@ -5,12 +5,16 @@ import { SnackbarProvider } from "notistack";
 import { IconButton } from "@mui/material";
 import { useRef } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { ThemeProvider } from "@emotion/react";
 
+import { createTheme } from "@mui/material/styles";
+import theme from "./utils/theme";
 
 function App() {
   const snackbar = useRef();
   return (
-    <SnackbarProvider
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider
         ref={snackbar}
         action={(key) => (
           <IconButton
@@ -28,8 +32,9 @@ function App() {
           horizontal: "center",
         }}
       >
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
       </SnackbarProvider>
+    </ThemeProvider>
   );
 }
 

@@ -9,7 +9,7 @@ const VideoLink = () => {
         flex: 1
     }}>
       <data-videolink
-        token="0639eabe1cc6dc8bb531b5b8e5f0a97e46dc224580471fc0a6d78224c295f052"
+        token="bc14c4eff22aa1751a58127c548af0f95fa3b7f18a3ce89462c8d934c4797e2c"
       >
       </data-videolink>
     </div>
