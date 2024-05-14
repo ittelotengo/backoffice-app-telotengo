@@ -30,6 +30,7 @@ import {
 } from "../../../repositories/banners.repository";
 import { storage } from "../../../../firebaseConfig";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import FormItemLabel from "antd/es/form/FormItemLabel";
 
 function CreateBanner() {
   const navigate = useNavigate();
@@ -56,6 +57,8 @@ function CreateBanner() {
     order: "",
     section: "",
     url: "",
+    redirect: "category",
+    query: "",
   };
 
   const handleChange = (e) => {
@@ -117,7 +120,6 @@ function CreateBanner() {
             setIsLoading(false);
           });
         }
-        
       }
     },
   });
@@ -144,6 +146,7 @@ function CreateBanner() {
       formik.setFieldValue("section", data.section);
       formik.setFieldValue("category", data.category);
       formik.setFieldValue("url", data.url);
+      formik.setFieldValue("redirect", data.redirect);
       setIsLoading(false);
     });
   }, []);
@@ -158,18 +161,23 @@ function CreateBanner() {
           >
             <ArrowBackIcon />
           </IconButton>
-          <h1 className="font-bold text-3xl ml-4"> {isCreate ? "Crear Banner" : "Editar Banner"} </h1>
+          <h1 className="font-bold text-3xl ml-4">
+            {" "}
+            {isCreate ? "Crear Banner" : "Editar Banner"}{" "}
+          </h1>
         </div>
 
-        {!isCreate && (<ButtonGeneric
-          type="Button"
-          onClick={() => handleDelete(id)}
-          text="Eliminar"
-          className="w-[13%]"
-          style={{
-            color: "white",
-          }}
-        />)}
+        {!isCreate && (
+          <ButtonGeneric
+            type="Button"
+            onClick={() => handleDelete(id)}
+            text="Eliminar"
+            className="w-[13%]"
+            style={{
+              color: "white",
+            }}
+          />
+        )}
       </div>
 
       <div className="pt-6">
@@ -231,11 +239,40 @@ function CreateBanner() {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
+                <h3 className="text-md font-bold mb-2">
+                  Redirección del banner
+                </h3>
+                <Select
+                  id={"redirect"}
+                  value={formik.values.redirect}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  name="redirect"
+                  placeholder="Redirección"
+                >
+                  {[
+                    { id: "category", label: "Vista de Categorias" },
+                    { id: "collection", label: "Vista de Colección" },
+                    { id: "search", label: "Vista de Búsqueda" },
+                  ].map((section) => {
+                    return (
+                      <MenuItem value={section?.id}>{section?.label}</MenuItem>
+                    );
+                  })}
+                </Select>
+              </Grid>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   type={"text"}
                   key={"category"}
                   name={"category"}
-                  label="Categoria"
+                  label={`Nombre ${
+                    formik.values.redirect == "category"
+                      ? "de la categoria"
+                      : formik.values.redirect == "collection"
+                      ? "del seller de la colección"
+                      : "de la búsqueda"
+                  }`}
                   variant="outlined"
                   fullWidth
                   value={formik.values.category}
@@ -245,7 +282,7 @@ function CreateBanner() {
                     formik.touched.category && Boolean(formik.errors.category)
                   }
                   helperText={formik.touched.category && formik.errors.category}
-                  placeholder="Categoria"
+                  placeholder={"Categoria"}
                 />
               </Grid>
             </Grid>
