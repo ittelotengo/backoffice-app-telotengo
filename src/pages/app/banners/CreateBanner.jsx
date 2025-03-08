@@ -1,36 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {
-  Grid,
-  IconButton,
-  InputAdornment,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
-
+import { IconButton, Grid, Select, TextField, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { enqueueSnackbar } from "notistack";
 import ButtonGeneric from "../../../components/atoms/button/ButtonGeneric";
-import {
-  createSeller,
-  detailSeller,
-  updateSeller,
-} from "../../../repositories/sellers.repository";
 import LoaderComponent from "../../../components/atoms/loader/LoaderComponent";
 import { getSections } from "../../../repositories/sections.repository";
-import {
-  createBanner,
-  deleteBanner,
-  detailBanner,
-  updateBanner,
-} from "../../../repositories/banners.repository";
-import { storage } from "../../../../firebaseConfig";
+import { createBanner, deleteBanner, detailBanner, updateBanner, } from "../../../repositories/banners.repository";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import FormItemLabel from "antd/es/form/FormItemLabel";
 
 function CreateBanner() {
   const navigate = useNavigate();
@@ -153,23 +131,19 @@ function CreateBanner() {
 
   return (
     <div className="w-full h-full mb-6">
+      {isLoading && <LoaderComponent />}
       <div className="w-full flex items-center justify-between">
-        <div className="flex items-center">
-          <IconButton
-            // className={styles.backBtn}
-            onClick={() => navigate("/banners/list")}
-          >
+        <div className="flex items-center column-gap-2">
+          <IconButton onClick={() => navigate("/banners/list")} >
             <ArrowBackIcon />
           </IconButton>
           <h1 className="font-bold text-3xl ml-4">
-            {" "}
-            {isCreate ? "Crear Banner" : "Editar Banner"}{" "}
+            {isCreate ? "Crear Banner" : "Editar Banner"}
           </h1>
         </div>
-
         {!isCreate && (
           <ButtonGeneric
-            type="Button"
+            type="button"
             onClick={() => handleDelete(id)}
             text="Eliminar"
             className="w-[13%]"
@@ -179,48 +153,49 @@ function CreateBanner() {
           />
         )}
       </div>
-
       <div className="pt-6">
         <form onSubmit={formik.handleSubmit} className="w-full">
           <Grid
             container
             spacing={2}
-            // alignItems={"center"}
+            alignItems={"flex-start"}
             justifyContent={"space-between"}
             flexDirection={"row"}
           >
-            <Grid item container sx={6} spacing={2} xs={6}>
+            <Grid item container sx={12} spacing={2} md={6}>
               <Grid item xs={12}>
                 <div className=" px-4 border-2 border-gray-300 border-dashed flex flex-col justify-center h-full">
-                  {/* <progress value={progress} max="100" className="w-full" /> */}
                   <br />
                   {formik.values.url && (
-                    <img
-                      src={formik.values.url}
-                      alt="Uploaded"
-                      className="mt-4"
-                    />
+                    <img src={formik.values.url} alt="Uploaded" className="mt-4" />
                   )}
                   <br />
                   <input type="file" onChange={handleChange} className="mb-4" />
                 </div>
               </Grid>
             </Grid>
-            <Grid item container sx={12} spacing={2} xs={6}>
+            <Grid item container sx={12} spacing={2} md={6}>
               <Grid item xs={12}>
-                <Select
-                  id={"section"}
-                  value={formik.values.section}
-                  onChange={formik.handleChange}
-                  fullWidth
-                  name="section"
-                >
-                  {sections.map((section) => {
-                    return (
-                      <MenuItem value={section?.id}>{section?.label}</MenuItem>
-                    );
-                  })}
-                </Select>
+                <FormControl fullWidth>
+                  <InputLabel id="section-label">Posición</InputLabel>
+                  <Select
+                    labelId="section-label"
+                    id={"section"}
+                    value={formik.values.section}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    label='Posición'
+                    name="section"
+                    variant="outlined"
+                  >
+                    <MenuItem value={null}></MenuItem>
+                    {sections.map((section) => {
+                      return (
+                        <MenuItem value={section?.id}>{section?.label}</MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={12}>
                 <TextField
@@ -239,40 +214,37 @@ function CreateBanner() {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <h3 className="text-md font-bold mb-2">
-                  Redirección del banner
-                </h3>
-                <Select
-                  id={"redirect"}
-                  value={formik.values.redirect}
-                  onChange={formik.handleChange}
-                  fullWidth
-                  name="redirect"
-                  placeholder="Redirección"
-                >
-                  {[
-                    { id: "category", label: "Vista de Categorias" },
-                    { id: "collection", label: "Vista de Colección" },
-                    { id: "search", label: "Vista de Búsqueda" },
-                  ].map((section) => {
-                    return (
-                      <MenuItem value={section?.id}>{section?.label}</MenuItem>
-                    );
-                  })}
-                </Select>
+                <FormControl fullWidth>
+                  <InputLabel id="section-label">Redirección</InputLabel>
+                  <Select
+                    id={"redirect"}
+                    value={formik.values.redirect}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    name="redirect"
+                    placeholder="Redirección"
+                    label="Redirección"
+                  >
+                    {[
+                      { id: "category", label: "Vista de Categorias" },
+                      { id: "collection", label: "Vista de Colección" },
+                      { id: "search", label: "Vista de Búsqueda" },
+                      { id: "product", label: "Vista de Producto" },
+                      { id: "seller", label: "Vista de Seller" },
+                    ].map((section) => {
+                      return (
+                        <MenuItem value={section?.id}>{section?.label}</MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={12}>
                 <TextField
                   type={"text"}
                   key={"category"}
                   name={"category"}
-                  label={`Nombre ${
-                    formik.values.redirect == "category"
-                      ? "de la categoria"
-                      : formik.values.redirect == "collection"
-                      ? "del seller de la colección"
-                      : "de la búsqueda"
-                  }`}
+                  label={`VTEX ID`}
                   variant="outlined"
                   fullWidth
                   value={formik.values.category}
@@ -286,28 +258,25 @@ function CreateBanner() {
                 />
               </Grid>
             </Grid>
+            <Grid item sx={12} className="flex items-center w-full mt-5">
+              <ButtonGeneric
+                type="Button"
+                onClick={() => navigate("/sellers/list")}
+                text="Regresar"
+                withBorder={true}
+              />
+              <ButtonGeneric
+                type="submit"
+                text="Guardar"
+                className="ml-6"
+                style={{
+                  color: "white",
+                }}
+              />
+            </Grid>
           </Grid>
-
-          <div className="flex items-center w-full mt-10">
-            <ButtonGeneric
-              type="Button"
-              onClick={() => navigate("/sellers/list")}
-              text="Regresar"
-              className="w-[13%]"
-              withBorder={true}
-            />
-            <ButtonGeneric
-              type="submit"
-              text="Guardar"
-              className="ml-6 w-[13%]"
-              style={{
-                color: "white",
-              }}
-            />
-          </div>
         </form>
       </div>
-      {isLoading && <LoaderComponent />}
     </div>
   );
 }
