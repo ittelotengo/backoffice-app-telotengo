@@ -58,7 +58,7 @@ function ListPaymentMethod() {
           data={
             searchFilter
               ? methods.filter((item) =>
-                item.name.toLowerCase().includes(searchFilter.toLowerCase())
+                item.title.toLowerCase().includes(searchFilter.toLowerCase())
               )
               : methods ?? []
           }
