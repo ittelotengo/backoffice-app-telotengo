@@ -95,6 +95,12 @@ function DrawerNav() {
             />
           ),
         },
+        {
+          text: "Métodos de Pago",
+          id: "payment-methods",
+          to: "/payment-methods/list",
+          icon: <ReportIcon color={["banners","sellers","payment-methods" ].includes(pathname) ?  "#5528E3" :  "#747576"}/>,
+        },
       ].map((item, index) => (
         <ListItem key={item.text} sx={{ display: "block" }}>
           <ListItemButton

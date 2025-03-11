@@ -8,6 +8,8 @@ import ListSellers from "./pages/app/sellers/ListSellers";
 import CreateSeller from "./pages/app/sellers/CreateSeller";
 import ListBanners from "./pages/app/banners/ListBanners";
 import CreateBanner from "./pages/app/banners/CreateBanner";
+import ListPaymentMethod from "./pages/app/paymentMethods/ListPaymentMethod";
+import CreatePaymentMethod from "./pages/app/paymentMethods/CreatePaymentMethod";
 import Home from "./pages/app/home/Home";
 
 export const router = createBrowserRouter([
@@ -48,7 +50,6 @@ export const router = createBrowserRouter([
             element: <CreateBanner />
           },
         ]
-        
       },
       {
         path: 'sellers',
@@ -66,8 +67,24 @@ export const router = createBrowserRouter([
             element: <CreateSeller />
           },
         ]
-        
-      }
+      },
+      {
+        path: 'payment-methods',
+        children: [
+          {
+            path: 'list',
+            element: <ListPaymentMethod />
+          },
+          {
+            path: 'create',
+            element: <CreatePaymentMethod />
+          },
+          {
+            path: 'update/:id',
+            element: <CreatePaymentMethod />
+          },
+        ]
+      },
     ],
   },
   {
