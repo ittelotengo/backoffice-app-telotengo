@@ -56,6 +56,7 @@ function ListBanners() {
           maxWidth="1200px"
           columns={[
             { id: "url", label: "Logo", col: "url" },
+            { id: "canRedirect", label: "canRedirect", col: "canRedirect" },
             { id: "section", label: "Sección", col: "section" },
             { id: "order", label: "Orden", col: "order" },
             { id: "", label: "Opciones", col: "options" },

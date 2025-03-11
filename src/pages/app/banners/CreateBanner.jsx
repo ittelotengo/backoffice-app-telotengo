@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { IconButton, Grid, Select, TextField, MenuItem, InputLabel, FormControl } from "@mui/material";
+import { IconButton, Grid, Select, TextField, MenuItem, InputLabel, FormControl, FormGroup, FormControlLabel, Switch } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
@@ -26,11 +26,12 @@ function CreateBanner() {
 
   const validationSchema = Yup.object().shape({
     order: Yup.string().required(" Campo Requerido"),
-    section: Yup.string().required(" Campo Requerido"),
-    url: Yup.string().required(" Campo Requerido"),
+    section: Yup.string().optional(),
+    url: Yup.string().optional(),
   });
 
   const initialValues = {
+    canRedirect: false,
     category: "",
     order: "",
     section: "",
@@ -120,6 +121,7 @@ function CreateBanner() {
     setIsLoading(true);
 
     detailBanner(id).then((data) => {
+      formik.setFieldValue("canRedirect", data.canRedirect);
       formik.setFieldValue("order", data.order);
       formik.setFieldValue("section", data.section);
       formik.setFieldValue("category", data.category);
@@ -175,6 +177,27 @@ function CreateBanner() {
               </Grid>
             </Grid>
             <Grid item container sx={12} spacing={2} md={6}>
+              <Grid item container sx={12} spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <FormGroup>
+                    <FormControlLabel
+                      error={formik.touched.canRedirect && Boolean(formik.errors.canRedirect)}
+                      helperText={formik.touched.canRedirect && formik.errors.canRedirect}
+                      control={
+                        <Switch
+                          type={"checkbox"}
+                          key={"canRedirect"}
+                          name={"canRedirect"}
+                          checked={formik.values.canRedirect}
+                          onChange={e => formik.setFieldValue(e.target.name, e.target.checked)}
+                          onBlur={formik.handleBlur}
+                        />
+                      }
+                      label="Redirección Activa"
+                    />
+                  </FormGroup>
+                </Grid>
+              </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel id="section-label">Posición</InputLabel>
