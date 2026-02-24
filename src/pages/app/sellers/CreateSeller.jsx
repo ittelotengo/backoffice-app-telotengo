@@ -46,6 +46,7 @@ function CreateSeller() {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(" Campo Requerido"),
     key: Yup.string().required(" Campo Requerido"),
+    custom_key: Yup.string(),
     token: Yup.string().required(" Campo Requerido"),
     image: Yup.string().required(" Campo Requerido"),
   });
@@ -53,6 +54,7 @@ function CreateSeller() {
   const initialValues = {
     name: "",
     key: "",
+    custom_key: "",
     token: "",
     image: "",
   };
@@ -114,6 +116,7 @@ function CreateSeller() {
     detailSeller(id).then((data) => {
       formik.setFieldValue("name", data.name);
       formik.setFieldValue("key", data.key);
+      formik.setFieldValue("custom_key", data.custom_key);
       formik.setFieldValue("token", data.token);
       formik.setFieldValue("image", data.image);
       setIsLoading(false);
@@ -157,7 +160,7 @@ function CreateSeller() {
             justifyContent={"space-between"}
           >
             <Grid item container sx={12} spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   type={"text"}
                   key={"name"}
@@ -173,7 +176,7 @@ function CreateSeller() {
                   placeholder="Nombre del Seller"
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   type={"text"}
                   key={"key"}
@@ -187,6 +190,22 @@ function CreateSeller() {
                   error={formik.touched.key && Boolean(formik.errors.key)}
                   helperText={formik.touched.key && formik.errors.key}
                   placeholder="Key del Seller"
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  type={"text"}
+                  key={"custom_key"}
+                  name={"custom_key"}
+                  label="Key Secundario del Seller"
+                  variant="outlined"
+                  fullWidth
+                  value={formik.values.custom_key}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.custom_key && Boolean(formik.errors.custom_key)}
+                  helperText={formik.touched.custom_key && formik.errors.custom_key}
+                  placeholder="Key Secundario del Seller"
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
