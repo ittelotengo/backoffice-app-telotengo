@@ -64,3 +64,4 @@ node_modules/
 
 # Dist folder
 dist/
+.qodo
