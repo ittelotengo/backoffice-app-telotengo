@@ -133,7 +133,7 @@ function CreateSeller() {
           >
             <ArrowBackIcon />
           </IconButton>
-          <h1 className="font-bold text-3xl ml-4">
+          <h1 className="font-bold text-2xl ml-4">
             {" "}
             {isCreate ? "Crear Seller" : "Editar Seller"}
           </h1>
@@ -227,7 +227,7 @@ function CreateSeller() {
                 />
               </Grid>
             </Grid>
-            <h1 className="font-bold text-2xl ml-4 mt-6">Logo del seller</h1>
+            <h1 className="font-bold text-xl ml-4 mt-6">Logo del seller</h1>
             <Grid item container xs={12} marginY={2}>
               <Grid item xs={6}>
                 <div className=" px-4 border-2 border-gray-300 border-dashed flex flex-col justify-center h-full">

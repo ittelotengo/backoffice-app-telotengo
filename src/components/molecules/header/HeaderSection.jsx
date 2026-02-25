@@ -10,7 +10,7 @@ const HeaderSection = ({
 }) => {
   return (
     <div>
-      <h1 className="font-bold text-3xl">{title}</h1>
+      <h1 className="font-bold text-2xl">{title}</h1>
       <div className="flex justify-between items-center py-8 w-full ">
         <TextField
           id="search"

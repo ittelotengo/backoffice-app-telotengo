@@ -139,7 +139,7 @@ function CreateBanner() {
           <IconButton onClick={() => navigate("/banners/list")} >
             <ArrowBackIcon />
           </IconButton>
-          <h1 className="font-bold text-3xl ml-4">
+          <h1 className="font-bold text-2xl ml-4">
             {isCreate ? "Crear Banner" : "Editar Banner"}
           </h1>
         </div>

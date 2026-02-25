@@ -44,7 +44,7 @@ function ListBanners() {
     <div className="w-full h-full mb-6">
       <HeaderSection
         title="Banners"
-        textButton="Crear Banner"
+        textButton="Agregar Nuevo Banner"
         onClickButton={() => navigation("/banners/create")}
         setsearchFilter={setsearchFilter}
       />
