@@ -197,7 +197,7 @@ function CreateSeller() {
                   type={"text"}
                   key={"custom_key"}
                   name={"custom_key"}
-                  label="Key Secundario del Seller"
+                  label="Seller VTEX ID"
                   variant="outlined"
                   fullWidth
                   value={formik.values.custom_key}
@@ -205,7 +205,7 @@ function CreateSeller() {
                   onBlur={formik.handleBlur}
                   error={formik.touched.custom_key && Boolean(formik.errors.custom_key)}
                   helperText={formik.touched.custom_key && formik.errors.custom_key}
-                  placeholder="Key Secundario del Seller"
+                  placeholder="Seller VTEX ID"
                 />
               </Grid>
               <Grid item xs={12} sm={12}>

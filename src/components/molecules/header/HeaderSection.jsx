@@ -11,7 +11,7 @@ const HeaderSection = ({
   return (
     <div>
       <h1 className="font-bold text-3xl">{title}</h1>
-      <div className="flex justify-between items-center py-10 w-full ">
+      <div className="flex justify-between items-center py-8 w-full ">
         <TextField
           id="search"
           type="search"
@@ -29,7 +29,7 @@ const HeaderSection = ({
           onChange={(event) => setsearchFilter(event.target.value)}
         />
         <button
-          className="bg-primary px-4 py-4 rounded-sm h-full w-1/5"
+          className="bg-primary px-3 py-4 rounded-md h-full w-1/5"
           onClick={onClickButton}
           style={{
             color: "#FFFFFF"

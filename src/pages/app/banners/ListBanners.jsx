@@ -55,7 +55,7 @@ function ListBanners() {
           mt={2}
           maxWidth="1200px"
           columns={[
-            { id: "url", label: "Logo", col: "url" },
+            { id: "url", label: "Imagen", col: "url" },
             { id: "section", label: "Sección", col: "section" },
             { id: "order", label: "Orden", col: "order" },
             { id: "", label: "Opciones", col: "options" },

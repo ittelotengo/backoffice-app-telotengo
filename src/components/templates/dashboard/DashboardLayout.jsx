@@ -37,7 +37,7 @@ function DashboardLayout() {
           className="site-layout"
           style={{ marginLeft: 200, background: "#F8F9FB" }}
         >
-          <Content style={{ margin: "0 30px 0", padding: '50px 25px', background: '#FFFFFF',overflow: "initial" }}>
+          <Content style={{ margin: "0 30px 0", padding: '25px 25px', background: '#FFFFFF',overflow: "initial" }}>
             <Outlet />
           </Content>
         </Layout>
