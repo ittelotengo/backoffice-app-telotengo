@@ -12,6 +12,7 @@ import { HomeIcon } from "../../../assets/svg/menu/Home";
 import { UserIcon } from "../../../assets/svg/menu/User";
 import { ReportIcon } from "../../../assets/svg/menu/Report";
 import { Collapse } from "@mui/material";
+import { BannerIcon } from "../../../assets/svg/menu/Banner";
 
 const drawerWidth = 360;
 
@@ -83,7 +84,7 @@ function DrawerNav() {
           text: "Banners",
           id: "banners",
           to: "/banners/list",
-          icon: <HomeIcon color={pathname.includes("banners") ? "#5528E3" : "#747576"}/>,
+          icon: <BannerIcon color={pathname.includes("banners") ? "#5528E3" : "#747576"}/>,
         },
         {
           text: "Sellers",
