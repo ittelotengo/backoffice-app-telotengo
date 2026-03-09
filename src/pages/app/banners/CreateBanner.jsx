@@ -7,18 +7,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import ButtonGeneric from "../../../components/atoms/button/ButtonGeneric";
 import LoaderComponent from "../../../components/atoms/loader/LoaderComponent";
 import { getSections } from "../../../repositories/sections.repository";
-import { createBanner, deleteBanner, detailBanner, updateBanner, } from "../../../repositories/banners.repository";
+import { createBanner, deleteBanner, detailBanner, updateBanner } from "../../../repositories/banners.repository";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 function CreateBanner() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [sections, setSections] = useState([]);
-  const [progress, setProgress] = useState(0);
   const [file, setFile] = useState(null);
 
   const currentPath = window.location.pathname;
-
   const { id } = useParams();
   const [isCreate, setIsCreate] = useState(
     currentPath.split("/").includes("create")
@@ -48,16 +46,11 @@ function CreateBanner() {
   };
 
   const handleUpload = async (file, id) => {
-    // Create a root reference
     const storage = getStorage();
-
-    // Create a reference to 'mountains.jpg'
     const storageRef = ref(storage, `banners/${id}`);
-
     try {
       const uploadFile = await uploadBytes(storageRef, file);
       const url = await getDownloadURL(uploadFile.ref);
-
       return url;
     } catch (error) {
       console.log(error);
@@ -73,10 +66,7 @@ function CreateBanner() {
         if (!file) return;
         createBanner(values).then((resId) => {
           handleUpload(file, resId).then((url) => {
-            updateBanner(resId, {
-              ...values,
-              url,
-            }).then((res) => {
+            updateBanner(resId, { ...values, url }).then(() => {
               navigate("/banners/list");
               setIsLoading(false);
             });
@@ -85,16 +75,13 @@ function CreateBanner() {
       } else {
         if (file) {
           handleUpload(file, id).then((url) => {
-            updateBanner(id, {
-              ...values,
-              url,
-            }).then((res) => {
+            updateBanner(id, { ...values, url }).then(() => {
               navigate("/banners/list");
               setIsLoading(false);
             });
           });
         } else {
-          updateBanner(id, values).then((res) => {
+          updateBanner(id, values).then(() => {
             navigate("/banners/list");
             setIsLoading(false);
           });
@@ -106,20 +93,17 @@ function CreateBanner() {
   const handleDelete = (id) => {
     setIsLoading(true);
     deleteBanner(id)
-      .then((res) => {
+      .then(() => {
         navigate("/banners/list");
         setIsLoading(false);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
     getSections().then((res) => setSections(res));
     if (!id || isCreate) return;
     setIsLoading(true);
-
     detailBanner(id).then((data) => {
       formik.setFieldValue("canRedirect", data.canRedirect);
       formik.setFieldValue("order", data.order);
@@ -132,99 +116,78 @@ function CreateBanner() {
   }, []);
 
   return (
-    <div className="w-full h-full mb-6">
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh", backgroundColor: "#e6e5e5" }}>
       {isLoading && <LoaderComponent />}
-      <div className="w-full flex items-center justify-between">
-        <div className="flex items-center column-gap-2">
-          <IconButton onClick={() => navigate("/banners/list")} >
+
+      <div style={{ backgroundColor: "#ffffff", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <IconButton onClick={() => navigate("/banners/list")}>
             <ArrowBackIcon />
           </IconButton>
-          <h1 className="font-bold text-2xl ml-4">
+          <h1 style={{ fontWeight: "bold", fontSize: "1.5rem", margin: 0 }}>
             {isCreate ? "Crear Banner" : "Editar Banner"}
           </h1>
         </div>
-        {!isCreate && (
-          <ButtonGeneric
-            type="button"
-            onClick={() => handleDelete(id)}
-            text="Eliminar"
-            className="w-[13%]"
-            style={{
-              color: "white",
-            }}
-          />
-        )}
       </div>
-      <div className="pt-6">
-        <form onSubmit={formik.handleSubmit} className="w-full">
-          <Grid
-            container
-            spacing={2}
-            alignItems={"flex-start"}
-            justifyContent={"space-between"}
-            flexDirection={"row"}
-          >
-            <Grid item container sx={12} spacing={2} md={6}>
-              <Grid item xs={12}>
-                <div className=" px-4 border-2 border-gray-300 border-dashed flex flex-col justify-center h-full">
-                  <br />
-                  {formik.values.url && (
-                    <img src={formik.values.url} alt="Uploaded" className="mt-4" />
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+        <form onSubmit={formik.handleSubmit}>
+          <Grid container spacing={3} alignItems="flex-start" justifyContent="space-between">
+
+            <Grid item xs={12} md={6}>
+              <div style={{ backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", padding: "16px" }}>
+                <div style={{ border: "2px dashed #d1d5db", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "16px", minHeight: "300px" }}>
+                  {formik.values.url ? (
+                    <img src={formik.values.url} alt="Uploaded" style={{ width: "100%", borderRadius: "8px", objectFit: "cover" }} />
+                  ) : (
+                    <p style={{ color: "#9ca3af" }}>Sin imagen</p>
                   )}
-                  <br />
-                  <input type="file" onChange={handleChange} className="mb-4" />
+                  <input type="file" onChange={handleChange} style={{ marginTop: "16px" }} />
                 </div>
-              </Grid>
+                <p style={{ textAlign: "center", color: "#9ca3af", fontSize: "12px", marginTop: "8px" }}>
+                  Dimensiones recomendadas: 1552x778px
+                </p>
+              </div>
             </Grid>
-            <Grid item container sx={12} spacing={2} md={6}>
-              <Grid item container sx={12} spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <FormGroup>
-                    <FormControlLabel
-                      error={formik.touched.canRedirect && Boolean(formik.errors.canRedirect)}
-                      helperText={formik.touched.canRedirect && formik.errors.canRedirect}
-                      control={
-                        <Switch
-                          type={"checkbox"}
-                          key={"canRedirect"}
-                          name={"canRedirect"}
-                          checked={formik.values.canRedirect}
-                          onChange={e => formik.setFieldValue(e.target.name, e.target.checked)}
-                          onBlur={formik.handleBlur}
-                        />
-                      }
-                      label="Redirección Activa"
-                    />
-                  </FormGroup>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
+
+            <Grid item xs={12} md={6}>
+              <div style={{ backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
+
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        name="canRedirect"
+                        checked={formik.values.canRedirect}
+                        onChange={(e) => formik.setFieldValue(e.target.name, e.target.checked)}
+                        onBlur={formik.handleBlur}
+                      />
+                    }
+                    label="Redirección Activa"
+                  />
+                </FormGroup>
+
                 <FormControl fullWidth>
                   <InputLabel id="section-label">Posición</InputLabel>
                   <Select
                     labelId="section-label"
-                    id={"section"}
+                    name="section"
                     value={formik.values.section}
                     onChange={formik.handleChange}
-                    fullWidth
-                    label='Posición'
-                    name="section"
-                    variant="outlined"
+                    label="Posición"
                   >
                     <MenuItem value={null}></MenuItem>
-                    {sections.map((section) => {
-                      return (
-                        <MenuItem value={section?.id}>{section?.label}</MenuItem>
-                      );
-                    })}
+                    {sections.map((section) => (
+                      <MenuItem key={section?.id} value={section?.id}>
+                        {section?.label}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={12}>
+
                 <TextField
-                  type={"number"}
-                  key={"order"}
-                  name={"order"}
+                  type="number"
+                  name="order"
                   label="Orden"
                   variant="outlined"
                   fullWidth
@@ -235,17 +198,13 @@ function CreateBanner() {
                   helperText={formik.touched.order && formik.errors.order}
                   placeholder="Orden del banner en la sección"
                 />
-              </Grid>
-              <Grid item xs={12} sm={12}>
+
                 <FormControl fullWidth>
-                  <InputLabel id="section-label">Redirección</InputLabel>
+                  <InputLabel>Redirección</InputLabel>
                   <Select
-                    id={"redirect"}
+                    name="redirect"
                     value={formik.values.redirect}
                     onChange={formik.handleChange}
-                    fullWidth
-                    name="redirect"
-                    placeholder="Redirección"
                     label="Redirección"
                   >
                     {[
@@ -254,52 +213,59 @@ function CreateBanner() {
                       { id: "search", label: "Vista de Búsqueda" },
                       { id: "product", label: "Vista de Producto" },
                       { id: "seller", label: "Vista de Seller" },
-                    ].map((section) => {
-                      return (
-                        <MenuItem value={section?.id}>{section?.label}</MenuItem>
-                      );
-                    })}
+                    ].map((s) => (
+                      <MenuItem key={s.id} value={s.id}>
+                        {s.label}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={12}>
+
                 <TextField
-                  type={"text"}
-                  key={"category"}
-                  name={"category"}
-                  label={`VTEX ID`}
+                  type="text"
+                  name="category"
+                  label="VTEX ID"
                   variant="outlined"
                   fullWidth
                   value={formik.values.category}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.category && Boolean(formik.errors.category)
-                  }
+                  error={formik.touched.category && Boolean(formik.errors.category)}
                   helperText={formik.touched.category && formik.errors.category}
-                  placeholder={"Categoria"}
+                  placeholder="Categoria"
                 />
-              </Grid>
+              </div>
             </Grid>
-            <Grid item sx={12} className="flex items-center w-full mt-5">
-              <ButtonGeneric
-                type="Button"
-                onClick={() => navigate("/sellers/list")}
-                text="Regresar"
-                withBorder={true}
-              />
-              <ButtonGeneric
-                type="submit"
-                text="Guardar"
-                className="ml-6"
-                style={{
-                  color: "white",
-                }}
-              />
-            </Grid>
+
           </Grid>
         </form>
       </div>
+
+      <div style={{ backgroundColor: "#ffffff", borderTop: "1px solid #e5e7eb", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 -4px 6px -1px rgba(0,0,0,0.05)", flexShrink: 0, zIndex: 50 }}>
+        <div style={{ display: "flex", gap: "24px" }}>
+          <ButtonGeneric
+            type="button"
+            onClick={() => navigate("/banners/list")}
+            text="Regresar"
+            withBorder={true}
+          />
+          {!isCreate && (
+            <ButtonGeneric
+              type="button"
+              onClick={() => handleDelete(id)}
+              text="Eliminar"
+              style={{ color: "#ef4444", border: "2px solid #ef4444", backgroundColor: "#fff" }}
+            />
+          )}
+        </div>
+        <ButtonGeneric
+          type="button"
+          onClick={formik.handleSubmit}
+          text="Guardar Cambios"
+          style={{ backgroundColor: "#3b1fa3", color: "white", padding: "10px 32px", borderRadius: "8px", fontWeight: "bold" }}
+        />
+      </div>
+
     </div>
   );
 }

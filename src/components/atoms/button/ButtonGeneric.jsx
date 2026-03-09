@@ -16,7 +16,7 @@ const ButtonGeneric = ({
         disabled
           ? "bg-gray_button_disabled border-gray_button_disabled"
           : "bg-primary border-primary text-white"
-      } px-4 py-3 border-2  rounded-sm h-full font-semibold ${className}`}
+      } px-4 py-3 border-2 rounded-lg h-full font-semibold ${className}`}
       onClick={onCLick}
       disabled={disabled}
       {...props}
@@ -26,7 +26,7 @@ const ButtonGeneric = ({
   ) : (
     <button
       type={type}
-      className={`bg-white px-4 py-3 rounded-sm h-full  border-2 border-primary text-primary rounderd-sm font-semibold ${className}`}
+      className={`bg-white px-4 py-3 rounded-lg h-full  border-2 border-primary text-primary rounderd-sm font-semibold ${className}`}
       onClick={onCLick}
       {...props}
     >

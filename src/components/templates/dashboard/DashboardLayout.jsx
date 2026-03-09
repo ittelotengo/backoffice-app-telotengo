@@ -17,7 +17,7 @@ function DashboardLayout() {
   return (
     <Layout style={{ background: "#F8F9FB" }}>
       <HeaderNav />
-      <Layout style={{ minHeight: "92.25vh", background: "#F8F9FB" }} hasSider>
+      <Layout style={{ minHeight: "92.25vh", background: "#F8F9FB", display: "flex", justifyContent: "space-between" }} hasSider>
         {/* <DrawerNav /> */}
         <Sider
           width={200}
@@ -29,15 +29,17 @@ function DashboardLayout() {
             top: 60,
             bottom: 0,
             background: "white",
+            boxShadow: "3px 0px 16px 2px rgba(171, 171, 171, 0.1)",
+            borderRight: "1px solid rgba(204, 204, 204, 0.46)"
           }}
         >
           <DrawerNav />
         </Sider>
         <Layout
           className="site-layout"
-          style={{ marginLeft: 200, background: "#F8F9FB" }}
+          style={{ marginLeft:"200px",background: "#F8F9FB" }}
         >
-          <Content style={{ margin: "0 30px 0", padding: '25px 25px', background: '#FFFFFF',overflow: "initial" }}>
+          <Content style={{ padding: '16px 24px', background: '#FFFFFF',overflow: "initial" }}>
             <Outlet />
           </Content>
         </Layout>
