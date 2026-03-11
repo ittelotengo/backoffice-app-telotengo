@@ -175,19 +175,6 @@ function CreateSeller() {
                 />
                 <TextField
                   type="text"
-                  name="key"
-                  label="Key del Seller"
-                  variant="outlined"
-                  fullWidth
-                  value={formik.values.key}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.key && Boolean(formik.errors.key)}
-                  helperText={formik.touched.key && formik.errors.key}
-                  placeholder="Key del Seller"
-                />
-                <TextField
-                  type="text"
                   name="custom_key"
                   label="Seller VTEX ID"
                   variant="outlined"
@@ -198,6 +185,19 @@ function CreateSeller() {
                   error={formik.touched.custom_key && Boolean(formik.errors.custom_key)}
                   helperText={formik.touched.custom_key && formik.errors.custom_key}
                   placeholder="Seller VTEX ID"
+                />
+                <TextField
+                  type="text"
+                  name="key"
+                  label="Key del Seller"
+                  variant="outlined"
+                  fullWidth
+                  value={formik.values.key}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.key && Boolean(formik.errors.key)}
+                  helperText={formik.touched.key && formik.errors.key}
+                  placeholder="Key del Seller"
                 />
                 <TextField
                   type="text"
