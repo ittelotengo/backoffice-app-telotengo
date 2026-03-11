@@ -3,17 +3,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Grid,
   IconButton,
-  InputAdornment,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { enqueueSnackbar } from "notistack";
 import ButtonGeneric from "../../../components/atoms/button/ButtonGeneric";
 import {
   createSeller,
@@ -30,7 +25,6 @@ function CreateSeller() {
   const [file, setFile] = useState(null);
 
   const currentPath = window.location.pathname;
-
   const { id } = useParams();
   const [isCreate, setIsCreate] = useState(
     currentPath.split("/").includes("create")
@@ -68,10 +62,7 @@ function CreateSeller() {
         if (!file) return;
         createSeller(values).then((resId) => {
           uploadFileStorage(file, resId, "sellers").then((url) => {
-            updateSeller(resId, {
-              ...values,
-              image: url,
-            }).then((res) => {
+            updateSeller(resId, { ...values, image: url }).then(() => {
               navigate("/sellers/list");
               setIsLoading(false);
             });
@@ -80,16 +71,13 @@ function CreateSeller() {
       } else {
         if (file) {
           uploadFileStorage(file, id, "sellers").then((url) => {
-            updateSeller(id, {
-              ...values,
-              image: url,
-            }).then((res) => {
+            updateSeller(id, { ...values, image: url }).then(() => {
               navigate("/sellers/list");
               setIsLoading(false);
             });
           });
         } else {
-          updateSeller(id, values).then((res) => {
+          updateSeller(id, values).then(() => {
             navigate("/sellers/list");
             setIsLoading(false);
           });
@@ -99,9 +87,14 @@ function CreateSeller() {
   });
 
   const handleDelete = (id) => {
+    const confirmed = window.confirm(
+      "¿Estás seguro de que deseas eliminar este seller? Esta acción no se puede deshacer."
+    );
+    if (!confirmed) return;
+
     setIsLoading(true);
     deleteSeller(id)
-      .then((res) => {
+      .then(() => {
         navigate("/sellers/list");
         setIsLoading(false);
       })
@@ -124,47 +117,52 @@ function CreateSeller() {
   }, []);
 
   return (
-    <div className="w-full h-full mb-6">
-      <div className="w-full flex items-center justify-between">
-        <div className="flex items-center">
-          <IconButton
-            // className={styles.backBtn}
-            onClick={() => navigate("/sellers/list")}
-          >
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh", backgroundColor: "#e6e5e5" }}>
+      {isLoading && <LoaderComponent />}
+
+      {/* Header bar */}
+      <div style={{ backgroundColor: "#ffffff", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <IconButton onClick={() => navigate("/sellers/list")}>
             <ArrowBackIcon />
           </IconButton>
-          <h1 className="font-bold text-2xl ml-4">
-            {" "}
+          <h1 style={{ fontWeight: "bold", fontSize: "1.5rem", margin: 0 }}>
             {isCreate ? "Crear Seller" : "Editar Seller"}
           </h1>
         </div>
-        {!isCreate && (
-          <ButtonGeneric
-            type="Button"
-            onClick={() => handleDelete(id)}
-            text="Eliminar"
-            className="w-[13%]"
-            style={{
-              color: "white",
-            }}
-          />
-        )}
       </div>
 
-      <div className="pt-6">
-        <form onSubmit={formik.handleSubmit} className="w-full">
-          <Grid
-            container
-            spacing={2}
-            alignItems={"center"}
-            justifyContent={"space-between"}
-          >
-            <Grid item container sx={12} spacing={2}>
-              <Grid item xs={12} sm={4}>
+      {/* Scrollable content */}
+      <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+        <form onSubmit={formik.handleSubmit}>
+          <Grid container spacing={3} alignItems="flex-start" justifyContent="space-between">
+
+            {/* Logo card (left) */}
+            <Grid item xs={12} md={6}>
+              <div style={{ backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", padding: "16px" }}>
+                <h2 style={{ fontWeight: "bold", fontSize: "1.1rem", margin: "0 0 12px 0" }}>Logo del Seller</h2>
+                <div style={{ border: "2px dashed #d1d5db", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "16px", minHeight: "300px" }}>
+                  {formik.values.image ? (
+                    <img src={formik.values.image} alt="Uploaded" style={{ width: "100%", borderRadius: "8px", objectFit: "cover" }} />
+                  ) : (
+                    <p style={{ color: "#9ca3af" }}>Sin imagen</p>
+                  )}
+                  <input type="file" onChange={handleChange} style={{ marginTop: "16px" }} />
+                </div>
+                {formik.errors["image"] && formik.touched["image"] && (
+                  <p style={{ color: "#d32f2f", fontSize: "12px", marginTop: "8px" }}>
+                    {formik.errors["image"]}
+                  </p>
+                )}
+              </div>
+            </Grid>
+
+            {/* Fields card (right) */}
+            <Grid item xs={12} md={6}>
+              <div style={{ backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
                 <TextField
-                  type={"text"}
-                  key={"name"}
-                  name={"name"}
+                  type="text"
+                  name="name"
                   label="Nombre del Seller"
                   variant="outlined"
                   fullWidth
@@ -175,12 +173,9 @@ function CreateSeller() {
                   helperText={formik.touched.name && formik.errors.name}
                   placeholder="Nombre del Seller"
                 />
-              </Grid>
-              <Grid item xs={12} sm={4}>
                 <TextField
-                  type={"text"}
-                  key={"key"}
-                  name={"key"}
+                  type="text"
+                  name="key"
                   label="Key del Seller"
                   variant="outlined"
                   fullWidth
@@ -191,12 +186,9 @@ function CreateSeller() {
                   helperText={formik.touched.key && formik.errors.key}
                   placeholder="Key del Seller"
                 />
-              </Grid>
-              <Grid item xs={12} sm={4}>
                 <TextField
-                  type={"text"}
-                  key={"custom_key"}
-                  name={"custom_key"}
+                  type="text"
+                  name="custom_key"
                   label="Seller VTEX ID"
                   variant="outlined"
                   fullWidth
@@ -207,12 +199,9 @@ function CreateSeller() {
                   helperText={formik.touched.custom_key && formik.errors.custom_key}
                   placeholder="Seller VTEX ID"
                 />
-              </Grid>
-              <Grid item xs={12} sm={12}>
                 <TextField
-                  type={"text"}
-                  key={"token"}
-                  name={"token"}
+                  type="text"
+                  name="token"
                   label="Token del Seller"
                   variant="outlined"
                   fullWidth
@@ -223,60 +212,40 @@ function CreateSeller() {
                   helperText={formik.touched.token && formik.errors.token}
                   placeholder="Token del Seller"
                   multiline
-                  rows={6}
+                  rows={4}
                 />
-              </Grid>
+              </div>
             </Grid>
-            <h1 className="font-bold text-xl ml-4 mt-6">Logo del seller</h1>
-            <Grid item container xs={12} marginY={2}>
-              <Grid item xs={6}>
-                <div className=" px-4 border-2 border-gray-300 border-dashed flex flex-col justify-center h-full">
-                  {/* <progress value={progress} max="100" className="w-full" /> */}
-                  <br />
-                  {formik.values.image && (
-                    <img
-                      src={formik.values.image}
-                      alt="Uploaded"
-                      className="mt-4"
-                    />
-                  )}
-                  <br />
-                  <input type="file" onChange={handleChange} className="mb-4" />
-                </div>
-                {formik.errors["image"] && (
-                  <p
-                    className="text-red-400"
-                    style={{
-                      color: "#d32f2f",
-                    }}
-                  >
-                    {formik.errors["image"]}
-                  </p>
-                )}
-              </Grid>
-            </Grid>
-          </Grid>
 
-          <div className="flex items-center w-full mt-10">
-            <ButtonGeneric
-              type="Button"
-              onClick={() => navigate("/sellers/list")}
-              text="Regresar"
-              className="w-[13%]"
-              withBorder={true}
-            />
-            <ButtonGeneric
-              type="submit"
-              text="Guardar"
-              className="ml-6 w-[13%]"
-              style={{
-                color: "white",
-              }}
-            />
-          </div>
+          </Grid>
         </form>
       </div>
-      {isLoading && <LoaderComponent />}
+
+      {/* Sticky footer */}
+      <div style={{ backgroundColor: "#ffffff", borderTop: "1px solid #e5e7eb", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 -4px 6px -1px rgba(0,0,0,0.05)", flexShrink: 0, zIndex: 50 }}>
+        <div style={{ display: "flex", gap: "24px" }}>
+          <ButtonGeneric
+            type="button"
+            onClick={() => navigate("/sellers/list")}
+            text="Regresar"
+            withBorder={true}
+          />
+          {!isCreate && (
+            <ButtonGeneric
+              type="button"
+              onClick={() => handleDelete(id)}
+              text="Eliminar"
+              style={{ color: "#ef4444", border: "2px solid #ef4444", backgroundColor: "#fff" }}
+            />
+          )}
+        </div>
+        <ButtonGeneric
+          type="button"
+          onClick={formik.handleSubmit}
+          text="Guardar Cambios"
+          style={{ backgroundColor: "#3b1fa3", color: "white", padding: "10px 32px", borderRadius: "8px", fontWeight: "bold" }}
+        />
+      </div>
     </div>
   );
 }
