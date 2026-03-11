@@ -91,6 +91,9 @@ function CreateBanner() {
   });
 
   const handleDelete = (id) => {
+    const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este banner? Esta acción no se puede deshacer.");
+    if (!confirmed) return;
+
     setIsLoading(true);
     deleteBanner(id)
       .then(() => {
