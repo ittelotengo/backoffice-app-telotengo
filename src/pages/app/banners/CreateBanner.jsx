@@ -133,7 +133,7 @@ function CreateBanner() {
         </div>
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+      <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3} alignItems="flex-start" justifyContent="space-between">
 
@@ -154,7 +154,7 @@ function CreateBanner() {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <div style={{ backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", padding: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
 
                 <FormGroup>
                   <FormControlLabel

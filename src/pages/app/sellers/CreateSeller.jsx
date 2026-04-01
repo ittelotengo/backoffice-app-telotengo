@@ -4,6 +4,8 @@ import {
   Grid,
   IconButton,
   TextField,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 
 import { useFormik } from "formik";
@@ -43,6 +45,7 @@ function CreateSeller() {
     custom_key: Yup.string(),
     token: Yup.string().required(" Campo Requerido"),
     image: Yup.string().required(" Campo Requerido"),
+    active: Yup.boolean(),
   });
 
   const initialValues = {
@@ -51,6 +54,7 @@ function CreateSeller() {
     custom_key: "",
     token: "",
     image: "",
+    active: true,
   };
 
   const formik = useFormik({
@@ -112,6 +116,7 @@ function CreateSeller() {
       formik.setFieldValue("custom_key", data.custom_key);
       formik.setFieldValue("token", data.token);
       formik.setFieldValue("image", data.image);
+      formik.setFieldValue("active", data.active ?? true);
       setIsLoading(false);
     });
   }, []);
@@ -133,7 +138,7 @@ function CreateSeller() {
       </div>
 
       {/* Scrollable content */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+      <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3} alignItems="flex-start" justifyContent="space-between">
 
@@ -159,7 +164,23 @@ function CreateSeller() {
 
             {/* Fields card (right) */}
             <Grid item xs={12} md={6}>
-              <div style={{ backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ backgroundColor: "#ffffff", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", padding: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formik.values.active}
+                      onChange={(e) => formik.setFieldValue("active", e.target.checked)}
+                      color="primary"
+                    />
+                  }
+                  label={formik.values.active ? "Seller Activo" : "Seller Inactivo"}
+                  style={{
+                    backgroundColor: formik.values.active ? "#e8f5e9" : "#fbe9e7",
+                    borderRadius: "8px",
+                    padding: "4px 12px",
+                    margin: 0,
+                  }}
+                />
                 <TextField
                   type="text"
                   name="name"
